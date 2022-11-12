@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { selectOrderList } from "../apis/api";
 import { useEffect, useState } from "react";
 import OrderCard from "./OrderCard";
+import Modal from "../common/Modal";
 
 const OrderList = () => {
   const [data, setList] = useState<Order[]>([]);
-
   const [open, setOpen] = useState(false);
   const [close, setClose] = useState(false);
 
@@ -22,7 +22,6 @@ const OrderList = () => {
   }, []);
 
   const getList = (lists: Order[]) => {
-    console.log("list = ", lists);
     if (!Array.isArray(lists) || lists.length === 0) return [];
     return lists.map((list) => {
       return <OrderCard data={list} key={list.id} />;
@@ -39,6 +38,9 @@ const OrderList = () => {
       >
         <span>주문하기</span>
       </div>
+      <Modal open={open} close={closeModal} header="주문하기">
+        <main> 모달 오픈 </main>
+      </Modal>
       {getList(data)}
     </List>
   );
