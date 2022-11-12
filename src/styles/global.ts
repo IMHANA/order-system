@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
 ${reset}
   html,
   body{
-    background: #0C0F0F;
+    background: #FFF;
      ::-webkit-scrollbar {
     display: none;
   }
