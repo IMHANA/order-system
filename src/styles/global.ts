@@ -1,14 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import NotoSansKRBoldOTF from "../assets/NotoSansKR-Black.otf";
-import NotoSansKRBoldWOFF from "../assets/font/NotoSansKR-Bold.woff";
-import NotoSansKRBoldWOFF2 from "../assets/font/NotoSansKR-Bold.woff2";
-import NotoSansKRLightOTF from "../assets/font/NotoSansKR-Light.otf";
-import NotoSansKRLightWOFF from "../assets/font/NotoSansKR-Light.woff";
-import NotoSansKRLightWOFF2 from "../assets/font/NotoSansKR-Light.woff2";
-import NotoSansKRRegularOTF from "../assets/font/NotoSansKR-Regular.otf";
-import NotoSansKRRegularWOFF from "../assets/font/NotoSansKR-Regular.woff";
-import NotoSansKRRegularWOFF2 from "../assets/font/NotoSansKR-Regular.woff2";
+import NotoSansKRBoldWOFF from "../assets/NotoSansKR-Bold.woff";
+import NotoSansKRBoldWOFF2 from "../assets/NotoSansKR-Bold.woff2";
+import NotoSansKRLightOTF from "../assets/NotoSansKR-Light.otf";
+import NotoSansKRLightWOFF from "../assets/NotoSansKR-Light.woff";
+import NotoSansKRLightWOFF2 from "../assets/NotoSansKR-Light.woff2";
+import NotoSansKRRegularOTF from "../assets/NotoSansKR-Regular.otf";
+import NotoSansKRRegularWOFF from "../assets/NotoSansKR-Regular.woff";
+import NotoSansKRRegularWOFF2 from "../assets/NotoSansKR-Regular.woff2";
 
 const GlobalStyle = createGlobalStyle`
 ${reset}
