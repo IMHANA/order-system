@@ -1,27 +1,28 @@
 import { Link } from "react-router-dom";
 import { IOrder } from "src/apis/types";
+import { dateFormat } from "src/common/utils";
 import styled from "styled-components";
 
 interface Props {
   data: IOrder;
 }
 const OrderCard = ({ data }: Props) => {
-  const checkTime = (time: string) => {
-    if (time.length === 1) return "0" + time;
-    return time;
-  };
+  // const checkTime = (time: string) => {
+  //   if (time.length === 1) return "0" + time;
+  //   return time;
+  // };
 
-  const dateFormat = (date: string) => {
-    if (!data) return "";
-    let newDate = new Date(date).toISOString().replace("T", "");
-    let returnDate =
-      newDate.substring(0, 10) +
-      " " +
-      checkTime(newDate.substring(11, 12)) +
-      ":" +
-      checkTime(newDate.substring(14, 15));
-    return returnDate;
-  };
+  // const dateFormat = (date: string) => {
+  //   if (!data) return "";
+  //   let newDate = new Date(date).toISOString().replace("T", "");
+  //   let returnDate =
+  //     newDate.substring(0, 10) +
+  //     " " +
+  //     checkTime(newDate.substring(11, 12)) +
+  //     ":" +
+  //     checkTime(newDate.substring(14, 15));
+  //   return returnDate;
+  // };
 
   const getOrderWindow = (id: number) => {
     return window.open("/orders/" + id);
