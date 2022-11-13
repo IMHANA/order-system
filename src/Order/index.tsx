@@ -11,8 +11,10 @@ const Order = () => {
 
   const [order, setOrder] = useState<IOrder>();
   const [user, setUser] = useState<IUser>();
+  // 읽기 or 수정 모드 switch
   const [onRead, setOnRead] = useState<boolean>(true);
 
+  // 고객, 주문정보 호출
   useEffect(() => {
     selectOrderList().then((res) => {
       const finditems = res.filter((item) => item.id === Number(search));

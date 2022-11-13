@@ -22,7 +22,7 @@ export interface IUser {
 
 export interface IOrder {
   /** 주문 id */
-  id?: number;
+  id: number;
   /** 고객 id */
   customerId: number;
   /** 배송지 주소 1 */
@@ -32,5 +32,8 @@ export interface IOrder {
   /** 주문 금액 */
   totalPrice: number;
   /** 주문 일시 */
-  createdAt?: string;
+  createdAt: string;
 }
+
+/** 주문 생성시 type */
+export type CreatOrder = Omit<IOrder, "id" | "createdAt">;

@@ -1,5 +1,11 @@
 import { API } from "./utils/config";
-import { ApiRequestData, ApiRequestOption, IOrder, IUser } from "./types";
+import {
+  ApiRequestData,
+  ApiRequestOption,
+  CreatOrder,
+  IOrder,
+  IUser,
+} from "./types";
 
 /**
  * 공통 api 호출 - fetch
@@ -60,7 +66,7 @@ export const selectOrderList = async () => {
  * @param _body
  * @returns insert Data
  */
-export const createOrder = async (_body: IOrder): Promise<IOrder> => {
+export const createOrder = async (_body: CreatOrder): Promise<IOrder> => {
   const result: IOrder = await sendAPI({
     endpoint: "orders",
     method: "POST",
