@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import OrderCard from "./OrderCard";
 import Modal from "../common/Modal";
 import { createOrder } from "../apis/api";
-import Pagenation from "./Pagenation";
+import Pagenation, { LIMIT } from "./Pagenation";
 import { useNavigate } from "react-router-dom";
 
 const OrderList = () => {
@@ -14,6 +14,9 @@ const OrderList = () => {
   const [close, setClose] = useState(false);
 
   const navigate = useNavigate();
+
+  const [page, setPage] = useState(1);
+  const offset = (page - 1) * LIMIT;
 
   const openModal = () => {
     setOpen(true);
@@ -26,11 +29,15 @@ const OrderList = () => {
     selectOrderList().then((res) => setList(res));
   }, []);
 
-  const getList = (lists: Order[]) => {
-    if (!Array.isArray(lists) || lists.length === 0) return [];
-    return lists.map((list) => {
-      return <OrderCard data={list} key={list.id} />;
-    });
+  const MainList = ({ lists }: { lists: Order[] }) => {
+    if (!Array.isArray(lists) || lists.length === 0) return <></>;
+    return (
+      <>
+        {data.slice(offset, offset + LIMIT).map((list) => {
+          return <OrderCard data={list} key={list.id} />;
+        })}
+      </>
+    );
   };
 
   const handleSubmit = (
@@ -62,15 +69,25 @@ const OrderList = () => {
       >
         <span>주문하기</span>
       </div>
+
+      <MainList lists={data} />
+
+      <Pagenation
+        total={data.length}
+        page={page}
+        setPage={(page) => {
+          setPage(page);
+        }}
+      />
+
       <Modal
         open={open}
         close={closeModal}
         header="주문하기"
         handleSubmit={handleSubmit}
       >
-        <main> 모달 오픈 </main>
+        <main></main>
       </Modal>
-      {getList(data)}
     </List>
   );
 };
