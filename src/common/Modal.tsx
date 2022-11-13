@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { createOrder, selectUserList } from "../apis/api";
 import styled from "styled-components";
 import { User } from "src/apis/types";
@@ -50,7 +50,12 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
     setInputAmount(Number(amount));
   };
 
-  const sendChanges = () => {
+  const sendChanges = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputUserId || !inputAddress1 || !inputAddress2 || !inputAmount) {
+      alert("주문실패");
+      close();
+    }
     handleSubmit(inputUserId, inputAddress1, inputAddress2, inputAmount);
   };
 
@@ -72,11 +77,15 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
               </button>
             </header>
             <main>
-              <form className="input-container" onSubmit={sendChanges}>
+              <form
+                className="input-container"
+                onSubmit={(e) => sendChanges(e)}
+              >
                 <select
-                  name="user-name"
+                  id="user-name"
                   onChange={(e) => handleName(e.currentTarget.value)}
                 >
+                  <option value="">선택해주세요</option>
                   {getUsers()}
                 </select>
                 <input
