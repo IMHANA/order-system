@@ -6,13 +6,32 @@ interface Props {
   data: Order;
 }
 const OrderCard = ({ data }: Props) => {
+  const checkTime = (time: string) => {
+    if (time.length === 1) return "0" + time;
+    return time;
+  };
+
+  const dateFormat = (date: string) => {
+    if (!data) return "";
+    let newDate = new Date(date).toISOString().replace("T", "");
+    let returnDate =
+      newDate.substring(0, 10) +
+      " " +
+      checkTime(newDate.substring(11, 12)) +
+      ":" +
+      checkTime(newDate.substring(14, 15));
+    return returnDate;
+  };
+
   return (
     <Card>
       <Link to={"/orders/" + data.id}>
         <p className="order-id">{data.id}</p>
       </Link>
       <div>
-        <p className="time">주문생성일자 : {data.createdAt}</p>
+        <p className="time">
+          주문생성일자 : {data.createdAt && dateFormat(data.createdAt)}
+        </p>
         <p className="user-id">고객 ID : {data.customerId}</p>
         <p className="address-first">주소1 : {data.address1}</p>
         <p className="address-second">주소2 : {data.address2}</p>
