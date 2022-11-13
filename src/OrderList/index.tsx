@@ -4,6 +4,8 @@ import { selectOrderList } from "../apis/api";
 import { useEffect, useState } from "react";
 import OrderCard from "./OrderCard";
 import Modal from "../common/Modal";
+import { createOrder } from "../apis/api";
+import Pagenation from "./Pagenation";
 
 const OrderList = () => {
   const [data, setList] = useState<Order[]>([]);
@@ -28,6 +30,30 @@ const OrderList = () => {
     });
   };
 
+  const handleSubmit = (
+    customerId: number,
+    address1: string,
+    address2: string,
+    totalPrice: number
+  ) => {
+    const body = {
+      customerId: customerId,
+      address1: address1,
+      address2: address2,
+      totalPrice: totalPrice,
+    };
+
+    if (
+      !body.address1 ||
+      !body.address2 ||
+      !body.customerId ||
+      !body.totalPrice
+    ) {
+      alert("주문 실패");
+    }
+    createOrder(body).then((res) => alert(res));
+  };
+
   return (
     <List>
       <div
@@ -38,7 +64,12 @@ const OrderList = () => {
       >
         <span>주문하기</span>
       </div>
-      <Modal open={open} close={closeModal} header="주문하기">
+      <Modal
+        open={open}
+        close={closeModal}
+        header="주문하기"
+        handleSubmit={handleSubmit}
+      >
         <main> 모달 오픈 </main>
       </Modal>
       {getList(data)}
@@ -49,6 +80,7 @@ const OrderList = () => {
 const List = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 10% 20%;
   .order-btn {
     align-self: end;
     margin: 16px 0;
