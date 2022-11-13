@@ -11,7 +11,7 @@ export interface ApiRequestOption {
   body?: string;
 }
 
-export interface User {
+export interface IUser {
   /** 고객 id */
   id: number;
   /** 고객명 */
@@ -20,7 +20,7 @@ export interface User {
   createdAt: string;
 }
 
-export interface Order {
+export interface IOrder {
   /** 주문 id */
   id?: number;
   /** 고객 id */

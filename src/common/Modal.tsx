@@ -1,7 +1,7 @@
 import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { createOrder, selectUserList } from "../apis/api";
 import styled from "styled-components";
-import { User } from "src/apis/types";
+import { IUser } from "src/apis/types";
 
 interface Props {
   open: boolean;
@@ -21,7 +21,7 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
   const [inputAddress1, setInputAddress1] = useState<string>("");
   const [inputAddress2, setInputAddress2] = useState<string>("");
   const [inputAmount, setInputAmount] = useState<number>(0);
-  const [user, setUser] = useState<User[]>();
+  const [user, setUser] = useState<IUser[]>();
 
   useEffect(() => {
     selectUserList().then((res) => setUser(res));

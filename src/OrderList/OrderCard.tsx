@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { Order } from "src/apis/types";
+import { IOrder } from "src/apis/types";
 import styled from "styled-components";
 
 interface Props {
-  data: Order;
+  data: IOrder;
 }
 const OrderCard = ({ data }: Props) => {
   const checkTime = (time: string) => {

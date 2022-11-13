@@ -1,5 +1,5 @@
 import { API } from "./utils/config";
-import { ApiRequestData, ApiRequestOption, Order, User } from "./types";
+import { ApiRequestData, ApiRequestOption, IOrder, IUser } from "./types";
 
 /**
  * 공통 api 호출 - fetch
@@ -7,7 +7,7 @@ import { ApiRequestData, ApiRequestOption, Order, User } from "./types";
  * @returns response Data
  */
 
-const sendAPI = (data: ApiRequestData): Promise<any> => {
+const sendAPI = <T>(data: ApiRequestData): Promise<T> => {
   const { endpoint, method, param = {}, body } = data;
   const apiUrl = new URL(`${API.IP}/${endpoint}`);
   //url set param
@@ -34,10 +34,10 @@ const sendAPI = (data: ApiRequestData): Promise<any> => {
 
 /**
  * 모든 주문 조회
- * @returns Array<Order>
+ * @returns Array<IOrder>
  */
 export const selectOrderList = async () => {
-  const result: Array<Order> = await sendAPI({
+  const result: Array<IOrder> = await sendAPI({
     endpoint: "orders",
     method: "GET",
   });
@@ -60,8 +60,8 @@ export const selectOrderList = async () => {
  * @param _body
  * @returns insert Data
  */
-export const createOrder = async (_body: Order) => {
-  const result: Order = await sendAPI({
+export const createOrder = async (_body: IOrder): Promise<IOrder> => {
+  const result: IOrder = await sendAPI({
     endpoint: "orders",
     method: "POST",
     body: _body,
@@ -86,8 +86,8 @@ export const createOrder = async (_body: Order) => {
  * @param _body
  * @returns update Data
  */
-export const modifyOrder = async (_id: number, _body: Order) => {
-  const result: Order = await sendAPI({
+export const modifyOrder = async (_id: number, _body: IOrder) => {
+  const result: IOrder = await sendAPI({
     endpoint: `orders/${_id}`,
     method: "PUT",
     body: _body,
@@ -96,8 +96,12 @@ export const modifyOrder = async (_id: number, _body: Order) => {
   return result;
 };
 
+/**
+ * 모든 고객 조회
+ * @returns<IUser>
+ */
 export const selectUserList = async () => {
-  const result: Array<User> = await sendAPI({
+  const result: Array<IUser> = await sendAPI({
     endpoint: "users",
     method: "GET",
   });

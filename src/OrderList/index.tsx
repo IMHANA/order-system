@@ -1,4 +1,4 @@
-import { Order } from "../apis/types";
+import { IOrder } from "../apis/types";
 import styled from "styled-components";
 import { selectOrderList } from "../apis/api";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import Pagenation, { LIMIT } from "./Pagenation";
 import { useNavigate } from "react-router-dom";
 
 const OrderList = () => {
-  const [data, setList] = useState<Order[]>([]);
+  const [list, setList] = useState<IOrder[]>([]);
   const [open, setOpen] = useState(false);
   const [close, setClose] = useState(false);
 
@@ -29,11 +29,11 @@ const OrderList = () => {
     selectOrderList().then((res) => setList(res));
   }, []);
 
-  const MainList = ({ lists }: { lists: Order[] }) => {
+  const MainList = ({ lists }: { lists: IOrder[] }) => {
     if (!Array.isArray(lists) || lists.length === 0) return <></>;
     return (
       <>
-        {data.slice(offset, offset + LIMIT).map((list) => {
+        {list.slice(offset, offset + LIMIT).map((list) => {
           return <OrderCard data={list} key={list.id} />;
         })}
       </>
@@ -70,10 +70,10 @@ const OrderList = () => {
         <span>주문하기</span>
       </div>
 
-      <MainList lists={data} />
+      <MainList lists={list} />
 
       <Pagenation
-        total={data.length}
+        total={list.length}
         page={page}
         setPage={(page) => {
           setPage(page);
