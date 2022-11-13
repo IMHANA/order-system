@@ -8,8 +8,8 @@ function App() {
     <>
       <GlobalStyle />
       <Routes>
-        <Route path="/" element={<Navigate to="/order" />} />
-        <Route path="/order" element={<OrderList />} />
+        <Route path="/" element={<Navigate to="/orders" />} />
+        <Route path="/orders" element={<OrderList />} />
         <Route path="/orders/:id" element={<Order />} />
       </Routes>
     </>
