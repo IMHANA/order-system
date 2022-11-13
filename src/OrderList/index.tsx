@@ -6,11 +6,14 @@ import OrderCard from "./OrderCard";
 import Modal from "../common/Modal";
 import { createOrder } from "../apis/api";
 import Pagenation from "./Pagenation";
+import { useNavigate } from "react-router-dom";
 
 const OrderList = () => {
   const [data, setList] = useState<Order[]>([]);
   const [open, setOpen] = useState(false);
   const [close, setClose] = useState(false);
+
+  const navigate = useNavigate();
 
   const openModal = () => {
     setOpen(true);
@@ -43,19 +46,14 @@ const OrderList = () => {
       totalPrice: totalPrice,
     };
 
-    if (
-      !body.address1 ||
-      !body.address2 ||
-      !body.customerId ||
-      !body.totalPrice
-    ) {
-      alert("주문 실패");
-    }
-    createOrder(body).then((res) => alert(res));
+    createOrder(body).then((res) => {
+      alert("주문작성 완료");
+      navigate("/");
+    });
   };
 
   return (
-    <List>
+    <List modalOpen={open}>
       <div
         className="order-btn"
         onClick={() => {
@@ -77,10 +75,17 @@ const OrderList = () => {
   );
 };
 
-const List = styled.div`
+const List = styled.div<{ modalOpen: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 10% 20%;
+  ${(props) =>
+    props.modalOpen &&
+    `position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%
+}`}
   .order-btn {
     align-self: end;
     margin: 16px 0;
