@@ -14,3 +14,7 @@ export const dateFormat = (date: string) => {
     checkTime(newDate.substring(14, 15));
   return returnDate;
 };
+
+export const amountFormat = (amount: number | string) => {
+  return amount.toLocaleString() + " 원";
+};

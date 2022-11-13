@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { IOrder } from "src/apis/types";
-import { dateFormat } from "src/common/utils";
+import { amountFormat, dateFormat } from "src/common/utils";
 import styled from "styled-components";
 
 interface Props {
@@ -43,7 +43,7 @@ const OrderCard = ({ data }: Props) => {
         <p className="user-id">고객 ID : {data.customerId}</p>
         <p className="address-first">주소1 : {data.address1}</p>
         <p className="address-second">주소2 : {data.address2}</p>
-        <p className="price">주문가격 : {data.totalPrice.toLocaleString()}원</p>
+        <p className="price">주문가격 : {amountFormat(data.totalPrice)}원</p>
       </div>
     </Card>
   );

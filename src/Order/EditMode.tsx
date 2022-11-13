@@ -1,4 +1,5 @@
 import { IOrder, IUser } from "src/apis/types";
+import { amountFormat, dateFormat } from "src/common/utils";
 
 interface Props {
   userData: IUser;
@@ -16,8 +17,8 @@ const EditMode = ({ userData, orderData }: Props) => {
       </div>
       <div className="user-info">
         <span>{userData?.id}</span>
-        <input type="input" />
-        <span>{userData?.createdAt}</span>
+        <span>{userData?.name}</span>
+        <span>{dateFormat(userData?.createdAt)}</span>
       </div>
 
       <p>주문 정보</p>
@@ -30,10 +31,14 @@ const EditMode = ({ userData, orderData }: Props) => {
       </div>
       <div className="order-info">
         <span>{orderData?.id}</span>
-        <input id="address1" type="input" />
-        <input id="address2" type="input" />
-        <input id="totalPrice" type="input" />
-        <span>{orderData?.createdAt}</span>
+        <input id="address1" type="input" placeholder={orderData.address1} />
+        <input id="address2" type="input" placeholder={orderData.address2} />
+        <input
+          id="totalPrice"
+          type="input"
+          placeholder={amountFormat(orderData.totalPrice)}
+        />
+        <span>{dateFormat(orderData?.createdAt)}</span>
       </div>
     </>
   );

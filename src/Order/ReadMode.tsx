@@ -1,5 +1,5 @@
 import { IOrder, IUser } from "src/apis/types";
-import { dateFormat } from "src/common/utils";
+import { amountFormat, dateFormat } from "src/common/utils";
 
 interface Props {
   userData: IUser;
@@ -32,7 +32,7 @@ const ReadMode = ({ userData, orderData }: Props) => {
         <span>{orderData?.id}</span>
         <span>{orderData?.address1}</span>
         <span>{orderData?.address2}</span>
-        <span>{orderData?.totalPrice}</span>
+        <span>{amountFormat(orderData?.totalPrice)}</span>
         <span>{dateFormat(orderData?.createdAt)}</span>
       </div>
     </>
