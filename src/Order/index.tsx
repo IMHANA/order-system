@@ -13,20 +13,20 @@ const Order = () => {
   const [user, setUser] = useState<IUser>();
   const [onRead, setOnRead] = useState<boolean>(true);
 
-  // Todo: then 안에서 유저정보 가져올것
   useEffect(() => {
     selectOrderList().then((res) => {
       const finditems = res.filter((item) => item.id === Number(search));
-      setOrder(finditems.length > 0 ? finditems[0] : undefined);
+      const orderItem = finditems.length > 0 ? finditems[0] : undefined;
+
+      selectUserList().then((res1) => {
+        const findUser = res1.filter(
+          (user) => user.id === orderItem?.customerId
+        );
+        setOrder(orderItem);
+        setUser(findUser.length > 0 ? findUser[0] : undefined);
+      });
     });
   }, [search]);
-
-  useEffect(() => {
-    selectUserList().then((res) => {
-      const findUser = res.filter((user) => user.id === order?.customerId);
-      setUser(findUser.length > 0 ? findUser[0] : undefined);
-    });
-  }, [order]);
 
   const InfoTable = React.useMemo(() => {
     if (!user || !order) return <></>;
