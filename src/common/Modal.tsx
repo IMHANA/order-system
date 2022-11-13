@@ -1,24 +1,46 @@
 import { ReactNode, useEffect, useState } from "react";
+import { createOrder, selectUserList } from "../apis/api";
 import styled from "styled-components";
+import { User } from "src/apis/types";
 
 interface Props {
   open: boolean;
   close: () => void;
   header: string;
   children: ReactNode;
+  handleSubmit: (
+    customerId: number,
+    address1: string,
+    address2: string,
+    totalPrice: number
+  ) => void;
 }
 
-const Modal = ({ open, close, header }: Props) => {
-  const [inputName, setInputName] = useState<string>("");
-  const [inputAddress, setInputAddress] = useState<string>("");
+const Modal = ({ open, close, header, handleSubmit }: Props) => {
+  const [inputUserId, setInputUserId] = useState<number>(0);
+  const [inputAddress1, setInputAddress1] = useState<string>("");
+  const [inputAddress2, setInputAddress2] = useState<string>("");
   const [inputAmount, setInputAmount] = useState<number>(0);
+  const [user, setUser] = useState<User[]>();
+
+  useEffect(() => {
+    selectUserList().then((res) => setUser(res));
+  }, []);
 
   const handleName = (name: string) => {
-    setInputName(name);
+    if (!name) alert("다시 선택해주세요");
+    const userId = user?.find((users) => users.name === name);
+    if (userId) setInputUserId(userId.id);
   };
-  const handleAddress = (address: string) => {
-    setInputAddress(address);
+
+  const handleAddress1 = (address: string) => {
+    setInputAddress1(address);
   };
+
+  const handleAddress2 = (address: string) => {
+    setInputAddress2(address);
+  };
+
   const handleAmount = (amount: number | string) => {
     let check = /^[0-9]+$/;
     if (!check.test(amount.toString())) {
@@ -27,7 +49,16 @@ const Modal = ({ open, close, header }: Props) => {
     }
     setInputAmount(Number(amount));
   };
-  const handleChange = () => {};
+
+  const sendChanges = () => {
+    handleSubmit(inputUserId, inputAddress1, inputAddress2, inputAmount);
+  };
+
+  const getUsers = () => {
+    return user?.map((u) => {
+      return <option value={u.name}>{u.name}</option>;
+    });
+  };
 
   return (
     <ModalContainer>
@@ -41,16 +72,22 @@ const Modal = ({ open, close, header }: Props) => {
               </button>
             </header>
             <main>
-              <form className="input-container" onSubmit={handleChange}>
-                <input
-                  id="name"
-                  placeholder="주문자명"
+              <form className="input-container" onSubmit={sendChanges}>
+                <select
+                  name="user-name"
                   onChange={(e) => handleName(e.currentTarget.value)}
+                >
+                  {getUsers()}
+                </select>
+                <input
+                  id="address1"
+                  placeholder="배송지 주소1"
+                  onChange={(e) => handleAddress1(e.currentTarget.value)}
                 ></input>
                 <input
-                  id="address"
-                  placeholder="배송지 주소"
-                  onChange={(e) => handleAddress(e.currentTarget.value)}
+                  id="address2"
+                  placeholder="배송지 주소2"
+                  onChange={(e) => handleAddress2(e.currentTarget.value)}
                 ></input>
                 <input
                   id="amount"
@@ -63,7 +100,9 @@ const Modal = ({ open, close, header }: Props) => {
               </form>
             </main>
             <footer>
-              <button className="close" onClick={close}></button>
+              <button className="close" onClick={close}>
+                close
+              </button>
             </footer>
           </section>
         ) : null}
@@ -121,14 +160,16 @@ const ModalContainer = styled.div`
   }
   .modal > section > footer {
     padding: 12px 16px;
-    text-align: right;
+    text-align: center;
   }
   .modal > section > footer button {
     padding: 6px 12px;
     color: #fff;
     background-color: #6c757d;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 15px;
+    width: 20%;
+    height: 30px;
   }
   .modal.openModal {
     display: flex;
@@ -141,7 +182,8 @@ const ModalContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    > input {
+    > input,
+    select {
       border: 1px solid #868e9c;
       width: 80%;
       height: 30px;
@@ -151,15 +193,19 @@ const ModalContainer = styled.div`
     }
     .make-btn {
       margin: 16px 0;
-      width: 100vw;
-      max-width: 375px;
+      width: 80%;
       height: 40px;
-      border: 1px solid #868e9c;
+      border: 1px solid #6c757d;
+      background-color: #fff;
       border-radius: 5px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      :hover {
+        background-color: #6c757d;
+        color: #fff;
+      }
     }
   }
   @keyframes modal-show {
