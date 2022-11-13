@@ -23,11 +23,18 @@ const OrderCard = ({ data }: Props) => {
     return returnDate;
   };
 
+  const getOrderWindow = (id: number) => {
+    return window.open("/orders/" + id);
+  };
+
   return (
     <Card>
-      <Link to={"/orders/" + data.id}>
-        <p className="order-id">{data.id}</p>
-      </Link>
+      <p
+        className="order-id"
+        onClick={() => data.id && getOrderWindow(data.id)}
+      >
+        {data.id}
+      </p>
       <div>
         <p className="time">
           주문생성일자 : {data.createdAt && dateFormat(data.createdAt)}
