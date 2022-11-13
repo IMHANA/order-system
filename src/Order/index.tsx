@@ -29,19 +29,16 @@ const Order = () => {
   }, [order]);
 
   const InfoTable = React.useMemo(() => {
-    if (onRead && user && order)
-      return (
-        <>
+    if (!user || !order) return <></>;
+    return (
+      <>
+        {onRead ? (
           <ReadMode userData={user} orderData={order} />
-        </>
-      );
-    else if (!onRead && user && order)
-      return (
-        <>
+        ) : (
           <EditMode userData={user} orderData={order} />
-        </>
-      );
-    else return <></>;
+        )}
+      </>
+    );
   }, [onRead, user, order]);
 
   const buttonText = React.useMemo(() => {
