@@ -1,34 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { selectOrderList, selectUserList } from "src/apis/api";
-import { IOrder, IUser } from "src/apis/types";
+import { modifyOrder, selectOrderList, selectUserList } from "src/apis/api";
+import { CreatOrder, IOrder, IUser } from "src/apis/types";
+import { dateFormat } from "src/common/utils";
 import styled from "styled-components";
 import EditMode from "./EditMode";
 import ReadMode from "./ReadMode";
 
 const Order = () => {
-  const search = window.location.pathname.replace("/orders/", "");
-
-  const [order, setOrder] = useState<IOrder>();
-  const [user, setUser] = useState<IUser>();
-  // 읽기 or 수정 모드 switch
+  const { order, setOrder, user, allUser, onSubmit } = useOrder();
+  // Read & Edit switch
   const [onRead, setOnRead] = useState<boolean>(true);
-
-  // 고객, 주문정보 호출
-  useEffect(() => {
-    selectOrderList().then((res) => {
-      const finditems = res.filter((item) => item.id === Number(search));
-      const orderItem = finditems.length > 0 ? finditems[0] : undefined;
-
-      selectUserList().then((res1) => {
-        const findUser = res1.filter(
-          (user) => user.id === orderItem?.customerId
-        );
-        setOrder(orderItem);
-        setUser(findUser.length > 0 ? findUser[0] : undefined);
-      });
-    });
-  }, [search]);
 
   const InfoTable = React.useMemo(() => {
     if (!user || !order) return <></>;
@@ -37,11 +19,16 @@ const Order = () => {
         {onRead ? (
           <ReadMode userData={user} orderData={order} />
         ) : (
-          <EditMode userData={user} orderData={order} />
+          <EditMode
+            userData={user}
+            orderData={order}
+            allUser={allUser}
+            onSubmit={onSubmit}
+          />
         )}
       </>
     );
-  }, [onRead, user, order]);
+  }, [user, order, onRead, allUser, onSubmit]);
 
   const buttonText = React.useMemo(() => {
     if (onRead) return "수정";
@@ -57,6 +44,65 @@ const Order = () => {
     </OrderLayout>
   );
 };
+
+//* hooks */
+function useOrder() {
+  // queryString
+  const search = window.location.pathname.replace("/orders/", "");
+  const [order, setOrder] = useState<IOrder>();
+  const [user, setUser] = useState<IUser>();
+  const [allUser, setAllUser] = useState<IUser[]>();
+
+  //* Order & User api */
+  useEffect(() => {
+    selectOrderList().then((res) => {
+      const finditems = res.filter((item) => item.id === Number(search));
+      const orderItem = finditems.length > 0 ? finditems[0] : undefined;
+
+      selectUserList().then((res1) => {
+        const findUser = res1.filter(
+          (user) => user.id === orderItem?.customerId
+        );
+        const allUserData = res1.length > 0 ? res1 : undefined;
+
+        setAllUser(allUserData);
+        setOrder(orderItem);
+        setUser(findUser.length > 0 ? findUser[0] : undefined);
+      });
+    });
+  }, [search]);
+
+  //* Order Update api */
+  const onSubmit = useCallback(
+    (data: CreatOrder) => {
+      if (!data.address1 || !data.address2) {
+        window.alert("주소를 입력하세요.");
+      } else if (!data.totalPrice) {
+        window.alert("금액을 입력하세요.");
+      }
+      if (
+        (data && data.customerId && data.address1 && data.address2,
+        data.totalPrice)
+      ) {
+        modifyOrder(Number(search), {
+          customerId: data.customerId,
+          address1: data.address1,
+          address2: data.address2,
+          totalPrice: data.totalPrice,
+        }).then((res) => setOrder(res));
+      }
+    },
+    [search]
+  );
+  return {
+    allUser,
+    order,
+    setOrder,
+    user,
+    onSubmit,
+  };
+}
+
 const OrderLayout = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,6 +116,7 @@ const OrderLayout = styled.div`
     align-items: center;
 
     > span,
+    select,
     input {
       display: inline-block;
       display: flex;
