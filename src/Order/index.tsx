@@ -1,14 +1,13 @@
-import React, { useCallback } from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { modifyOrder, selectOrderList, selectUserList } from "src/apis/api";
-import { CreatOrder, IOrder, IUser } from "src/apis/types";
-import { dateFormat } from "src/common/utils";
+import { CreateOrder, IOrder, IUser } from "src/apis/types";
 import styled from "styled-components";
 import EditMode from "./EditMode";
 import ReadMode from "./ReadMode";
 
 const Order = () => {
-  const { order, setOrder, user, allUser, onSubmit } = useOrder();
+  const { order, user, allUser, bodyData, setBodyData, onSubmit } = useOrder();
   // Read & Edit switch
   const [onRead, setOnRead] = useState<boolean>(true);
 
@@ -23,22 +22,26 @@ const Order = () => {
             userData={user}
             orderData={order}
             allUser={allUser}
-            onSubmit={onSubmit}
+            bodyData={bodyData}
+            setBodyData={setBodyData}
           />
         )}
       </>
     );
-  }, [user, order, onRead, allUser, onSubmit]);
+  }, [allUser, bodyData, onRead, order, setBodyData, user]);
 
-  const buttonText = React.useMemo(() => {
-    if (onRead) return "수정";
-    else return "저장";
-  }, [onRead]);
+  const handleEdit = async () => {
+    if (!onRead && bodyData) {
+      await onSubmit(() => setOnRead(!onRead));
+      return;
+    }
+    setOnRead(!onRead);
+  };
 
   return (
     <OrderLayout>
-      <div className="btn" onClick={() => setOnRead(!onRead)}>
-        <span>{buttonText}</span>
+      <div className="btn" onClick={handleEdit}>
+        <span>{onRead ? "수정" : "저장"}</span>
       </div>
       {InfoTable}
     </OrderLayout>
@@ -47,59 +50,59 @@ const Order = () => {
 
 //* hooks */
 function useOrder() {
-  // queryString
-  const search = window.location.pathname.replace("/orders/", "");
+  const { id } = useParams();
   const [order, setOrder] = useState<IOrder>();
   const [user, setUser] = useState<IUser>();
   const [allUser, setAllUser] = useState<IUser[]>();
+  // 주문 수정시 body param
+  const [bodyData, setBodyData] = useState<CreateOrder>();
 
   //* Order & User api */
-  useEffect(() => {
-    selectOrderList().then((res) => {
-      const finditems = res.filter((item) => item.id === Number(search));
-      const orderItem = finditems.length > 0 ? finditems[0] : undefined;
+  const getAllData = async () => {
+    const res = await selectOrderList();
+    const [target] = res.filter((item) => item.id === Number(id));
 
-      selectUserList().then((res1) => {
-        const findUser = res1.filter(
-          (user) => user.id === orderItem?.customerId
-        );
-        const allUserData = res1.length > 0 ? res1 : undefined;
+    const res1 = await selectUserList();
 
-        setAllUser(allUserData);
-        setOrder(orderItem);
-        setUser(findUser.length > 0 ? findUser[0] : undefined);
-      });
-    });
-  }, [search]);
+    const [findUser] = res1.filter((user) => user.id === target?.customerId);
+    const bodyItem = target && {
+      customerId: target.customerId,
+      address1: target.address1,
+      address2: target.address2,
+      totalPrice: target.totalPrice,
+    };
+    // 초기값 세팅
+    setUser(findUser);
+    setAllUser([...res1]);
+    setOrder(target);
+    setBodyData(bodyItem);
+  };
 
   //* Order Update api */
-  const onSubmit = useCallback(
-    (data: CreatOrder) => {
-      if (!data.address1 || !data.address2) {
-        window.alert("주소를 입력하세요.");
-      } else if (!data.totalPrice) {
-        window.alert("금액을 입력하세요.");
-      }
-      if (
-        (data && data.customerId && data.address1 && data.address2,
-        data.totalPrice)
-      ) {
-        modifyOrder(Number(search), {
-          customerId: data.customerId,
-          address1: data.address1,
-          address2: data.address2,
-          totalPrice: data.totalPrice,
-        }).then((res) => setOrder(res));
-      }
-    },
-    [search]
-  );
+  const onSubmit = async (callback?: () => void) => {
+    if (bodyData && order) {
+      await modifyOrder(Number(id), {
+        customerId: bodyData.customerId ?? order.customerId,
+        address1: bodyData.address1 ?? order.address1,
+        address2: bodyData.address2 ?? order.address2,
+        totalPrice: bodyData.totalPrice ?? order.totalPrice,
+      });
+      await getAllData();
+      callback?.();
+    }
+  };
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
   return {
     allUser,
     order,
-    setOrder,
     user,
+    bodyData,
     onSubmit,
+    setBodyData,
   };
 }
 
