@@ -92,7 +92,7 @@ export const createOrder = async (_body: CreatOrder): Promise<IOrder> => {
  * @param _body
  * @returns update Data
  */
-export const modifyOrder = async (_id: number, _body: IOrder) => {
+export const modifyOrder = async (_id: number, _body: CreatOrder) => {
   const result: IOrder = await sendAPI({
     endpoint: `orders/${_id}`,
     method: "PUT",
