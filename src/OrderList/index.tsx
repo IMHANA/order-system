@@ -1,4 +1,4 @@
-import { CreatOrder, IOrder } from "../apis/types";
+import { CreateOrder, IOrder } from "../apis/types";
 import styled from "styled-components";
 import { selectOrderList } from "../apis/api";
 import { useEffect, useState } from "react";
@@ -27,8 +27,11 @@ const OrderList = () => {
   };
 
   //* OrderList api */
+  const getOrderList = async () => {
+    await selectOrderList().then((res) => setList(res));
+  };
   useEffect(() => {
-    selectOrderList().then((res) => setList(res));
+    getOrderList();
   }, []);
 
   const MainList = ({ lists }: { lists: IOrder[] }) => {
@@ -43,23 +46,22 @@ const OrderList = () => {
   };
 
   //* Create Order api */
-  const handleSubmit = (
-    customerId: number,
-    address1: string,
-    address2: string,
-    totalPrice: number
-  ) => {
-    const body: CreatOrder = {
-      customerId: customerId,
-      address1: address1,
-      address2: address2,
-      totalPrice: totalPrice,
+  const handleSubmit = ({
+    customerId,
+    address1,
+    address2,
+    totalPrice,
+  }: CreateOrder) => {
+    const makeOrder = async () => {
+      createOrder({ customerId, address1, address2, totalPrice }).then(
+        (res) => {
+          alert("주문작성 완료");
+          navigate("/");
+        }
+      );
     };
 
-    createOrder(body).then((res) => {
-      alert("주문작성 완료");
-      navigate("/");
-    });
+    makeOrder();
   };
 
   return (

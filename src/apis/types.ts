@@ -36,4 +36,4 @@ export interface IOrder {
 }
 
 /** 주문 생성시 type */
-export type CreatOrder = Omit<IOrder, "id" | "createdAt">;
+export type CreateOrder = Omit<IOrder, "id" | "createdAt">;

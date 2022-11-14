@@ -1,62 +1,71 @@
 import { FormEvent, ReactNode, useEffect, useState } from "react";
-import { createOrder, selectUserList } from "../apis/api";
+import { selectUserList } from "../apis/api";
 import styled from "styled-components";
-import { IUser } from "src/apis/types";
+import { CreateOrder, IUser } from "src/apis/types";
 
 interface Props {
   open: boolean;
   close: () => void;
   header: string;
   children: ReactNode;
-  handleSubmit: (
-    customerId: number,
-    address1: string,
-    address2: string,
-    totalPrice: number
-  ) => void;
+  handleSubmit: ({
+    customerId,
+    address1,
+    address2,
+    totalPrice,
+  }: CreateOrder) => void;
 }
 
 const Modal = ({ open, close, header, handleSubmit }: Props) => {
-  const [inputUserId, setInputUserId] = useState<number>(0);
-  const [inputAddress1, setInputAddress1] = useState<string>("");
-  const [inputAddress2, setInputAddress2] = useState<string>("");
-  const [inputAmount, setInputAmount] = useState<number>(0);
+  const [bodyData, setBodyData] = useState<CreateOrder>({
+    customerId: 0,
+    address1: "",
+    address2: "",
+    totalPrice: 0,
+  });
   const [user, setUser] = useState<IUser[]>();
 
   useEffect(() => {
     selectUserList().then((res) => setUser(res));
   }, []);
 
-  const handleName = (name: string) => {
-    if (!name) alert("다시 선택해주세요");
-    const userId = user?.find((users) => users.name === name);
-    if (userId) setInputUserId(userId.id);
-  };
-
-  const handleAddress1 = (address: string) => {
-    setInputAddress1(address);
-  };
-
-  const handleAddress2 = (address: string) => {
-    setInputAddress2(address);
-  };
-
-  const handleAmount = (amount: number | string) => {
-    let check = /^[0-9]+$/;
-    if (!check.test(amount.toString())) {
-      setInputAmount(0);
-      alert("숫자만 입력 가능합니다.");
+  const handleStates = (
+    key: "customer" | "address1" | "address2" | "totalPrice",
+    data: string | number
+  ) => {
+    if (key === "customer") {
+      const userId = user?.find((users) => users.name === data);
+      setBodyData({ ...bodyData, customerId: Number(userId?.id) });
+    } else if (key === "address1") {
+      setBodyData({ ...bodyData, address1: data.toString() });
+    } else if (key === "address2") {
+      setBodyData({ ...bodyData, address2: data.toString() });
+    } else if (key === "totalPrice") {
+      let check = /^[0-9]+$/;
+      if (!check.test(data.toString())) {
+        return alert("숫자만 입력 가능합니다.");
+      }
+      setBodyData({ ...bodyData, totalPrice: Number(data) });
     }
-    setInputAmount(Number(amount));
   };
 
   const sendChanges = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!inputUserId || !inputAddress1 || !inputAddress2 || !inputAmount) {
+    if (
+      bodyData.customerId === 0 ||
+      bodyData.address1 === "" ||
+      bodyData.address2 === "" ||
+      bodyData.totalPrice === 0
+    ) {
       alert("주문실패");
       close();
     }
-    handleSubmit(inputUserId, inputAddress1, inputAddress2, inputAmount);
+    handleSubmit({
+      customerId: bodyData.customerId,
+      address1: bodyData.address1,
+      address2: bodyData.address2,
+      totalPrice: bodyData.totalPrice,
+    });
   };
 
   const getUsers = () => {
@@ -83,7 +92,9 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
               >
                 <select
                   id="user-name"
-                  onChange={(e) => handleName(e.currentTarget.value)}
+                  onChange={(e) =>
+                    handleStates("customer", e.currentTarget.value)
+                  }
                 >
                   <option value="">선택해주세요</option>
                   {getUsers()}
@@ -91,17 +102,23 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
                 <input
                   id="address1"
                   placeholder="배송지 주소1"
-                  onChange={(e) => handleAddress1(e.currentTarget.value)}
+                  onChange={(e) =>
+                    handleStates("address1", e.currentTarget.value)
+                  }
                 ></input>
                 <input
                   id="address2"
                   placeholder="배송지 주소2"
-                  onChange={(e) => handleAddress2(e.currentTarget.value)}
+                  onChange={(e) =>
+                    handleStates("address2", e.currentTarget.value)
+                  }
                 ></input>
                 <input
                   id="amount"
                   placeholder="주문 금액"
-                  onChange={(e) => handleAmount(e.currentTarget.value)}
+                  onChange={(e) =>
+                    handleStates("totalPrice", e.currentTarget.value)
+                  }
                 ></input>
                 <button type="submit" className="make-btn">
                   생성하기
