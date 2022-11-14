@@ -2,7 +2,7 @@ import { API } from "./utils/config";
 import {
   ApiRequestData,
   ApiRequestOption,
-  CreatOrder,
+  CreateOrder,
   IOrder,
   IUser,
 } from "./types";
@@ -66,7 +66,7 @@ export const selectOrderList = async () => {
  * @param _body
  * @returns insert Data
  */
-export const createOrder = async (_body: CreatOrder): Promise<IOrder> => {
+export const createOrder = async (_body: CreateOrder): Promise<IOrder> => {
   const result: IOrder = await sendAPI({
     endpoint: "orders",
     method: "POST",
@@ -92,7 +92,7 @@ export const createOrder = async (_body: CreatOrder): Promise<IOrder> => {
  * @param _body
  * @returns update Data
  */
-export const modifyOrder = async (_id: number, _body: CreatOrder) => {
+export const modifyOrder = async (_id: number, _body: CreateOrder) => {
   const result: IOrder = await sendAPI({
     endpoint: `orders/${_id}`,
     method: "PUT",

@@ -1,4 +1,4 @@
-import { CreatOrder, IOrder } from "../apis/types";
+import { CreateOrder, IOrder } from "../apis/types";
 import styled from "styled-components";
 import { selectOrderList } from "../apis/api";
 import { useEffect, useState } from "react";
@@ -49,7 +49,7 @@ const OrderList = () => {
     address2: string,
     totalPrice: number
   ) => {
-    const body: CreatOrder = {
+    const body: CreateOrder = {
       customerId: customerId,
       address1: address1,
       address2: address2,
