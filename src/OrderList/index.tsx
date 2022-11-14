@@ -25,6 +25,8 @@ const OrderList = () => {
     setClose(true);
     setOpen(false);
   };
+
+  //* OrderList api */
   useEffect(() => {
     selectOrderList().then((res) => setList(res));
   }, []);
@@ -40,6 +42,7 @@ const OrderList = () => {
     );
   };
 
+  //* Create Order api */
   const handleSubmit = (
     customerId: number,
     address1: string,
@@ -108,7 +111,7 @@ const List = styled.div<{ modalOpen: boolean }>`
     margin: 16px 0;
     width: 100vw;
     max-width: 375px;
-    height: 40px;
+    min-height: 40px;
     border: 1px solid #868e9c;
     border-radius: 5px;
     display: flex;

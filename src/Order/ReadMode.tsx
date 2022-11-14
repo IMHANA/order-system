@@ -5,6 +5,8 @@ interface Props {
   userData: IUser;
   orderData: IOrder;
 }
+
+//* Only Read */
 const ReadMode = ({ userData, orderData }: Props) => {
   return (
     <>
@@ -15,11 +17,10 @@ const ReadMode = ({ userData, orderData }: Props) => {
         <span>주문자 생성일자</span>
       </div>
       <div className="user-info">
-        <span>{userData?.id}</span>
-        <span>{userData?.name}</span>
-        <span>{dateFormat(userData?.createdAt)}</span>
+        <span>{userData.id}</span>
+        <span>{userData.name}</span>
+        <span>{dateFormat(userData.createdAt)}</span>
       </div>
-
       <p>주문 정보</p>
       <div className="order">
         <span>주문ID</span>
