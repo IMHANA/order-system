@@ -1,45 +1,70 @@
-import { useState } from "react";
-import { CreatOrder, IOrder, IUser } from "src/apis/types";
+import { FormEvent, useEffect } from "react";
+import { CreateOrder, IOrder, IUser } from "src/apis/types";
 import { amountFormat, dateFormat } from "src/common/utils";
 
 interface Props {
   userData: IUser;
   orderData: IOrder;
   allUser: IUser[] | undefined;
-  onSubmit: ({
+  bodyData: CreateOrder | undefined;
+  setBodyData: ({
     customerId,
     address1,
     address2,
     totalPrice,
-  }: CreatOrder) => void;
+  }: CreateOrder) => void;
 }
-// TODO: input값 바뀌면 저장했다가 값 비교 후 기존값과 다르면 modifyOrder()로 업데이트api 호출
-//* Can Edit (address1, address2, totalPrice) */
-const EditMode = ({ allUser, userData, orderData, onSubmit }: Props) => {
-  const [bodyData, setBodyData] = useState<CreatOrder>();
 
-  const userOptions = () => {
-    if (allUser) {
-      const restData = allUser
-        .map((user) => user)
-        .filter((name) => name.id !== userData.id);
+//* Edit available (userId, address1, address2, totalPrice) */
+const EditMode = ({
+  allUser,
+  userData,
+  orderData,
+  bodyData,
+  setBodyData,
+}: Props) => {
+  const UserOptions = () => {
+    if (allUser && bodyData) {
+      const restData = allUser.filter(
+        (user) => user.id !== bodyData.customerId
+      );
 
-      const rest = restData.map((user) => {
-        return <option value={user.name}>{user.name}</option>;
-      });
       return (
         <>
-          <option value={userData.name} selected>
-            {userData.name}
-          </option>
-          {rest}
+          {restData.map((user) => {
+            return (
+              <option key={user.createdAt} value={user.name}>
+                {user.name}
+              </option>
+            );
+          })}
         </>
       );
+    }
+    return <></>;
+  };
+
+  const handleChange = (
+    key: "customer" | "address1" | "address2" | "totalPrice",
+    data: string | number
+  ) => {
+    if (key === "customer" && bodyData) {
+      const findId = allUser?.filter((user) => user.name === data);
+      if (findId && findId.length > 0) {
+        setBodyData({ ...bodyData, customerId: findId[0].id });
+      }
+    } else if (key === "address1" && bodyData) {
+      setBodyData({ ...bodyData, address1: data.toString() });
+    } else if (key === "address2" && bodyData) {
+      setBodyData({ ...bodyData, address2: data.toString() });
+    } else if (key === "totalPrice" && bodyData) {
+      const price = data.toString().replace(/[^-0-9]/g, "");
+      setBodyData({ ...bodyData, totalPrice: Number(price) });
     }
   };
 
   return (
-    <form onSubmit={() => bodyData && onSubmit(bodyData)}>
+    <>
       <p>주문자 정보</p>
       <div className="user">
         <span>주문자ID</span>
@@ -48,7 +73,18 @@ const EditMode = ({ allUser, userData, orderData, onSubmit }: Props) => {
       </div>
       <div className="user-info">
         <span>{userData.id}</span>
-        <select>{userOptions()}</select>
+        <select
+          id="user-name"
+          onChange={(e) => handleChange("customer", e.currentTarget.value)}
+        >
+          <option value={""}>
+            {
+              allUser?.filter((user) => user.id === bodyData?.customerId)[0]
+                .name
+            }
+          </option>
+          <UserOptions />
+        </select>
         <span>{dateFormat(userData.createdAt)}</span>
       </div>
       <p>주문 정보</p>
@@ -61,16 +97,28 @@ const EditMode = ({ allUser, userData, orderData, onSubmit }: Props) => {
       </div>
       <div className="order-info">
         <span>{orderData?.id}</span>
-        <input id="address1" type="input" placeholder={orderData.address1} />
-        <input id="address2" type="input" placeholder={orderData.address2} />
+        <input
+          id="address1"
+          type="input"
+          placeholder={orderData.address1}
+          onChange={(e) => handleChange("address1", e.currentTarget.value)}
+        />
+        <input
+          id="address2"
+          type="input"
+          placeholder={orderData.address2}
+          onChange={(e) => handleChange("address2", e.currentTarget.value)}
+        />
         <input
           id="totalPrice"
           type="input"
           placeholder={amountFormat(orderData.totalPrice)}
+          onChange={(e) => handleChange("totalPrice", e.currentTarget.value)}
         />
         <span>{dateFormat(orderData?.createdAt)}</span>
       </div>
-    </form>
+    </>
+    // </form>
   );
 };
 export default EditMode;
