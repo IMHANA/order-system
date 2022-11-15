@@ -1,3 +1,4 @@
+import React from "react";
 import { IOrder, IUser } from "src/apis/types";
 import { amountFormat, dateFormat } from "src/common/utils";
 
@@ -6,7 +7,7 @@ interface Props {
   orderData: IOrder;
 }
 
-//* Only Read */
+//* Read Only */
 const ReadMode = ({ userData, orderData }: Props) => {
   return (
     <>
@@ -39,4 +40,4 @@ const ReadMode = ({ userData, orderData }: Props) => {
     </>
   );
 };
-export default ReadMode;
+export default React.memo(ReadMode);
