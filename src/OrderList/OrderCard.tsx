@@ -91,6 +91,7 @@ const Card = styled.div`
 
     .info {
       text-align: left;
+      width: 100%;
       > span {
         margin-bottom: 2px;
       }
