@@ -12,47 +12,104 @@ const OrderCard = ({ data }: Props) => {
   };
 
   return (
-    <Card>
-      <p
-        className="order-id"
-        onClick={() => data.id && getOrderWindow(data.id)}
-      >
-        {data.id}
-      </p>
-      <div>
-        <p className="time">
-          주문생성일자 : {data.createdAt && dateFormat(data.createdAt)}
-        </p>
-        <p className="user-id">고객 ID : {data.customerId}</p>
-        <p className="address-first">주소1 : {data.address1}</p>
-        <p className="address-second">주소2 : {data.address2}</p>
-        <p className="price">주문가격 : {amountFormat(data.totalPrice)}</p>
-      </div>
-    </Card>
+    <>
+      <Card>
+        <div className="info-container">
+          <div className="tag">
+            <span>주문생성일자</span>
+            <span>주소 1</span>
+            <span>주소 2</span>
+            <span>주문 가격</span>
+          </div>
+          <div className="info">
+            <span>{data.createdAt && dateFormat(data.createdAt)}</span>
+            <span className="address">{data.address1}</span>
+            <span className="address">{data.address2}</span>
+            <span>{amountFormat(data.totalPrice)}</span>
+          </div>
+        </div>
+        <div
+          className="order-id"
+          onClick={() => data.id && getOrderWindow(data.id)}
+        >
+          <span>{data.id}</span>
+        </div>
+      </Card>
+      <Divider className="divider" />
+    </>
   );
 };
 
 const Card = styled.div`
-  width: 100%;
-  height: 100%;
-  border: 1px solid #000;
-  margin-bottom: 2px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border-radius: 15px;
+  &:hover {
+    background-color: #e7eaef;
+  }
+
   .order-id {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 100%;
     font-size: 24px;
     font-weight: bold;
-    width: 50%;
-    text-align: center;
-  }
-  > div {
-    width: 50%;
-    align-items: center;
-    text-align: center;
-    > p {
-      text-align: left;
+    border-radius: 15px;
+    cursor: pointer;
+    &:hover > span {
+      color: #b00000;
     }
   }
+
+  .info-container {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    text-align: center;
+    flex-grow: 1;
+    margin-left: 5%;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      font-size: 15.5px;
+    }
+    .tag {
+      text-align: center;
+      width: 200px;
+      padding-right: 20px;
+      font-weight: 600;
+      > span:not(:last-child) {
+        border-bottom: 1px solid #f3f4f7;
+      }
+    }
+
+    .info {
+      text-align: left;
+      > span {
+        margin-bottom: 2px;
+      }
+
+      .address {
+        display: -webkit-box;
+        max-height: 14.5px;
+        overflow: hidden;
+        word-break: break-all;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        max-width: 450px;
+      }
+    }
+  }
+`;
+const Divider = styled.div`
+  width: 97%;
+  border-bottom: 1px solid #e7eaef;
+  align-self: center;
 `;
 export default OrderCard;

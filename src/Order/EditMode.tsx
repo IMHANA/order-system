@@ -65,52 +65,57 @@ const EditMode = ({
 
   return (
     <>
-      <p>주문자 정보</p>
+      <p className="title">고객 정보</p>
       <div className="user">
         <span>주문자ID</span>
-        <span>주문자명</span>
+        <span className="edit">주문자명</span>
         <span>주문자 생성일자</span>
       </div>
       <div className="user-info">
         <span>{userData.id}</span>
-        <select
-          id="user-name"
-          onChange={(e) => handleChange("customer", e.currentTarget.value)}
-        >
-          <option value={""}>
-            {
-              allUser?.filter((user) => user.id === bodyData?.customerId)[0]
-                .name
-            }
-          </option>
-          <UserOptions />
-        </select>
+        <div className="select-wrap">
+          <select
+            id="user-name"
+            onChange={(e) => handleChange("customer", e.currentTarget.value)}
+          >
+            <option value={""}>
+              {
+                allUser?.filter((user) => user.id === bodyData?.customerId)[0]
+                  .name
+              }
+            </option>
+            <UserOptions />
+          </select>
+        </div>
         <span>{dateFormat(userData.createdAt)}</span>
       </div>
-      <p>주문 정보</p>
+      <p className="title">주문 정보</p>
       <div className="order">
         <span>주문ID</span>
-        <span>배송지 주소1</span>
-        <span>배송지 주소2</span>
-        <span>주문금액</span>
+        <span className="edit">배송지 주소1</span>
+        <span className="edit">배송지 주소2</span>
+        <span className="edit">주문금액</span>
         <span>주문일시</span>
       </div>
       <div className="order-info">
         <span>{orderData?.id}</span>
         <input
           id="address1"
+          className="input-wrap"
           type="input"
           placeholder={orderData.address1}
           onChange={(e) => handleChange("address1", e.currentTarget.value)}
         />
         <input
           id="address2"
+          className="input-wrap"
           type="input"
           placeholder={orderData.address2}
           onChange={(e) => handleChange("address2", e.currentTarget.value)}
         />
         <input
           id="totalPrice"
+          className="input-wrap"
           type="input"
           placeholder={amountFormat(orderData.totalPrice)}
           onChange={(e) => handleChange("totalPrice", e.currentTarget.value)}

@@ -103,7 +103,7 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
                     handleStates("customer", e.currentTarget.value)
                   }
                 >
-                  <option value="">선택해주세요</option>
+                  <option value="">주문자는 선택해주세요</option>
                   {getUsers()}
                 </select>
                 <input
@@ -155,13 +155,15 @@ const ModalContainer = styled.div`
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.6);
   }
+
   .modal button {
     outline: none;
-    cursor: pointer;
     border: 0;
+    cursor: pointer;
   }
+
   .modal > section {
-    width: 90%;
+    width: 100%;
     max-width: 450px;
     margin: 0 auto;
     border-radius: 0.3rem;
@@ -169,12 +171,14 @@ const ModalContainer = styled.div`
     animation: modal-show 0.3s;
     overflow: hidden;
   }
+
   .modal > section > header {
     position: relative;
     padding: 16px 64px 16px 16px;
-    background-color: #f1f1f1;
+    background-color: #e7eaef;
     font-weight: 700;
   }
+
   .modal > section > header button {
     position: absolute;
     top: 15px;
@@ -186,24 +190,28 @@ const ModalContainer = styled.div`
     color: #999;
     background-color: transparent;
   }
+
   .modal > section > main {
     padding: 16px;
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
   }
+
   .modal > section > footer {
     padding: 12px 16px;
     text-align: center;
   }
+
   .modal > section > footer button {
+    width: 20%;
+    height: 30px;
     padding: 6px 12px;
     color: #fff;
     background-color: #6c757d;
     border-radius: 5px;
     font-size: 15px;
-    width: 20%;
-    height: 30px;
   }
+
   .modal.openModal {
     display: flex;
     align-items: center;
@@ -217,23 +225,24 @@ const ModalContainer = styled.div`
     align-items: center;
     > input,
     select {
-      border: 1px solid #868e9c;
       width: 80%;
       height: 30px;
-      border-radius: 5px;
       padding: 5px;
+      border: 1px solid #868e9c;
       margin-bottom: 15px;
-    }
-    .make-btn {
-      margin: 16px 0;
-      width: 80%;
-      height: 40px;
-      border: 1px solid #6c757d;
-      background-color: #fff;
       border-radius: 5px;
+    }
+
+    .make-btn {
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 80%;
+      height: 40px;
+      margin: 16px 0;
+      border: 1px solid #6c757d;
+      background-color: #fff;
+      border-radius: 5px;
       cursor: pointer;
       :hover {
         background-color: #6c757d;
@@ -241,6 +250,7 @@ const ModalContainer = styled.div`
       }
     }
   }
+
   @keyframes modal-show {
     from {
       opacity: 0;
@@ -251,6 +261,7 @@ const ModalContainer = styled.div`
       margin-top: 0;
     }
   }
+
   @keyframes modal-bg-show {
     from {
       opacity: 0;
