@@ -5,16 +5,17 @@ interface Props {
   limit?: number;
   page: number;
   setPage: (page: number) => void;
+  className: string;
 }
 
 export const LIMIT = 20;
 
-function Pagination({ total, limit = LIMIT, page, setPage }: Props) {
+function Pagination({ total, limit = LIMIT, page, setPage, className }: Props) {
   const numPages = Math.ceil(total / limit);
 
   return (
     <>
-      <Nav>
+      <Nav className={className}>
         <ArrowButton onClick={() => setPage(page - 1)} disabled={page === 1}>
           &lt;
         </ArrowButton>
@@ -45,24 +46,25 @@ const Nav = styled.nav`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
   gap: 4px;
   margin: 16px;
 `;
 
 const Button = styled.button<{ isCurrent: boolean }>`
+  padding: 8px;
   border: none;
   border-radius: 8px;
-  padding: 8px;
   margin: 0;
   color: #111;
   font-size: 1rem;
+  cursor: pointer;
 
   &:hover {
     background: #111;
     color: #111;
     ${(props) => !props.isCurrent && "color:#eb9077;"}
     cursor: pointer;
-    transform: translateY(-2px);
   }
 
   &[disabled] {
@@ -74,30 +76,27 @@ const Button = styled.button<{ isCurrent: boolean }>`
 
   &[aria-current] {
     font-weight: bold;
-    cursor: revert;
-    transform: revert;
     border: 1px solid transparent;
     ${(props) =>
-      props.isCurrent ? "background-color: #a9b6e4; " : "background-color:#fff"}
+      props.isCurrent
+        ? "background-color: #e7eaef;  cursor: revert; transform: revert;"
+        : "background-color:#fff; cursor: pointer;"}
   }
 `;
 
 const ArrowButton = styled.button`
-  border: none;
-  border-radius: 8px;
   padding: 8px;
-  margin: 0;
+  border: 1px solid #e1e2e3;
+  border-radius: 8px;
   background: #fff;
-  border: 1px solid #868e9c;
   color: #111;
   font-size: 1rem;
   margin: 0 15px;
 
   &:hover {
-    background: #111;
-    color: #ffffff;
+    background: #e1e2e3;
+    color: #111;
     cursor: pointer;
-    transform: translateY(-2px);
   }
 
   &[disabled] {
