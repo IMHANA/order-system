@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { modifyOrder, selectOrderList, selectUserList } from "src/apis/api";
-import { CreateOrder, IOrder, IUser } from "src/apis/types";
+import { modifyOrder, selectOrderList, selectUserList } from "../apis/api";
+import { CreateOrder, IOrder, IUser } from "../apis/types";
 import styled from "styled-components";
 import EditMode from "./EditMode";
 import ReadMode from "./ReadMode";

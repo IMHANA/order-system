@@ -1,6 +1,7 @@
+import React from "react";
 import { FormEvent, useCallback, useState } from "react";
 import styled from "styled-components";
-import { CreateOrder, IUser } from "src/apis/types";
+import { CreateOrder, IUser } from "../apis/types";
 
 interface Props {
   open: boolean;

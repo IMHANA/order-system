@@ -2,6 +2,7 @@ import GlobalStyle from "./styles/global";
 import { Navigate, Routes, Route } from "react-router-dom";
 import OrderList from "./OrderList";
 import Order from "./Order";
+import React from "react";
 
 function App() {
   return (

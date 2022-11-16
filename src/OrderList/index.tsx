@@ -7,6 +7,7 @@ import Modal from "../common/Modal";
 import { createOrder } from "../apis/api";
 import Pagenation, { LIMIT } from "./Pagenation";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 export type newOrderList = {
   orderData: IOrder;
