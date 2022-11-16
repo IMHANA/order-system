@@ -111,6 +111,18 @@ const OrderLayout = styled.div`
   flex-direction: column;
   padding: 10% 20%;
 
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .user,
+  .order {
+    font-weight: 600;
+    border-bottom: 1px solid #eaeaea;
+  }
+
   .user,
   .user-info,
   .order,
@@ -118,36 +130,68 @@ const OrderLayout = styled.div`
     display: flex;
     align-items: center;
 
+    .select-wrap {
+      min-width: 20%;
+
+      select {
+        border-bottom: 1px solid #eb9077;
+        width: 80%;
+      }
+    }
+    .input-wrap {
+      border-bottom: 1px solid #eb9077;
+      &:not(:last-of-type) {
+        border-right: 1px solid #f3e3de;
+      }
+    }
+
     > span,
     select,
     input {
-      display: inline-block;
       display: flex;
       min-width: 20%;
       min-height: 50px;
-      border: 1px solid #ccc;
+      border: none;
       align-items: center;
       padding-left: 10px;
+      font-size: 16px;
+
+      &::placeholder {
+        font-size: 16px;
+        color: #b7b6b6;
+      }
     }
   }
 
+  .edit {
+    color: #b00000;
+  }
+
   .user-info {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .btn {
-    align-self: end;
-    margin: 16px 0;
-    width: 100vw;
-    max-width: 375px;
-    height: 40px;
-    border: 1px solid #868e9c;
-    border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: end;
+    width: 100vw;
+    max-width: 375px;
+    min-height: 40px;
+    margin: 16px 0;
     margin-bottom: 20%;
+    border: 1px solid #868e9c;
+    border-radius: 5px;
     cursor: pointer;
+    &:hover {
+      background-color: #e7eaef;
+      border: none;
+      > span {
+        color: #111;
+        font-weight: bold;
+      }
+    }
 
     > span {
       color: #868e9c;
