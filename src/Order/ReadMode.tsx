@@ -1,6 +1,6 @@
 import React from "react";
-import { IOrder, IUser } from "src/apis/types";
-import { amountFormat, dateFormat } from "src/common/utils";
+import { IOrder, IUser } from "../apis/types";
+import { amountFormat, dateFormat } from "../common/utils";
 
 interface Props {
   userData: IUser;
