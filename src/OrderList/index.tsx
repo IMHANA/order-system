@@ -1,6 +1,6 @@
-import { CreateOrder, IOrder } from "../apis/types";
+import { CreateOrder, IOrder, IUser } from "../apis/types";
 import styled from "styled-components";
-import { selectOrderList } from "../apis/api";
+import { selectOrderList, selectUserList } from "../apis/api";
 import { useEffect, useState } from "react";
 import OrderCard from "./OrderCard";
 import Modal from "../common/Modal";
@@ -8,42 +8,108 @@ import { createOrder } from "../apis/api";
 import Pagenation, { LIMIT } from "./Pagenation";
 import { useNavigate } from "react-router-dom";
 
+export type newOrderList = {
+  orderData: IOrder;
+  userName: string;
+};
+
 const OrderList = () => {
-  const [list, setList] = useState<IOrder[]>([]);
+  const {
+    list,
+    offset,
+    open,
+    page,
+    setPage,
+    openModal,
+    closeModal,
+    handleSubmit,
+    user,
+  } = useOrderList();
+
+  // 주문정보 list
+  const MainList = ({ lists }: { lists: newOrderList[] }) => {
+    if (!Array.isArray(lists) || lists.length === 0) return <></>;
+    return (
+      <>
+        {list.slice(offset, offset + LIMIT).map((list, idx) => {
+          return <OrderCard data={list} key={idx + list.userName} />;
+        })}
+      </>
+    );
+  };
+
+  return (
+    <List modalOpen={open}>
+      <div
+        className="order-btn"
+        onClick={() => {
+          openModal();
+        }}
+      >
+        <span>주문하기</span>
+      </div>
+
+      <div className="item-list">
+        <MainList lists={list} />
+      </div>
+
+      <Pagenation
+        className="page"
+        total={list.length}
+        page={page}
+        setPage={(page) => {
+          setPage(page);
+        }}
+      />
+
+      <Modal
+        open={open}
+        close={closeModal}
+        header="주문하기"
+        user={user}
+        handleSubmit={handleSubmit}
+      />
+    </List>
+  );
+};
+
+//* hooks */
+function useOrderList() {
+  const [list, setList] = useState<newOrderList[]>([]);
   const [open, setOpen] = useState(false);
   const [close, setClose] = useState(false);
-
-  const navigate = useNavigate();
+  const [user, setUser] = useState<IUser[]>();
 
   const [page, setPage] = useState(1);
   const offset = (page - 1) * LIMIT;
 
+  const navigate = useNavigate();
+
   const openModal = () => {
     setOpen(true);
   };
+
   const closeModal = () => {
     setClose(true);
     setOpen(false);
   };
 
-  //* OrderList api */
+  //* Order & User api */
   const getOrderList = async () => {
-    await selectOrderList().then((res) => setList(res));
+    const res = await selectOrderList();
+    const res1 = await selectUserList();
+    let newResList: newOrderList[] = [];
+    res.map((data) => {
+      const name = res1.filter((user) => user.id === data.customerId);
+      return newResList.push({ orderData: data, userName: name[0].name });
+    });
+
+    setList(newResList);
+    setUser(res1);
   };
   useEffect(() => {
     getOrderList();
   }, []);
-
-  const MainList = ({ lists }: { lists: IOrder[] }) => {
-    if (!Array.isArray(lists) || lists.length === 0) return <></>;
-    return (
-      <>
-        {list.slice(offset, offset + LIMIT).map((list) => {
-          return <OrderCard data={list} key={list.id} />;
-        })}
-      </>
-    );
-  };
 
   //* Create Order api */
   const handleSubmit = ({
@@ -64,39 +130,18 @@ const OrderList = () => {
     makeOrder();
   };
 
-  return (
-    <List modalOpen={open}>
-      <div
-        className="order-btn"
-        onClick={() => {
-          openModal();
-        }}
-      >
-        <span>주문하기</span>
-      </div>
-      <div className="item-list">
-        <MainList lists={list} />
-      </div>
-      <Pagenation
-        className="page"
-        total={list.length}
-        page={page}
-        setPage={(page) => {
-          setPage(page);
-        }}
-      />
-
-      <Modal
-        open={open}
-        close={closeModal}
-        header="주문하기"
-        handleSubmit={handleSubmit}
-      >
-        <main></main>
-      </Modal>
-    </List>
-  );
-};
+  return {
+    list,
+    offset,
+    open,
+    openModal,
+    closeModal,
+    page,
+    setPage,
+    handleSubmit,
+    user,
+  };
+}
 
 const List = styled.div<{ modalOpen: boolean }>`
   display: flex;

@@ -1,9 +1,9 @@
-import { IOrder } from "src/apis/types";
 import { amountFormat, dateFormat } from "src/common/utils";
 import styled from "styled-components";
+import { newOrderList } from ".";
 
 interface Props {
-  data: IOrder;
+  data: newOrderList;
 }
 const OrderCard = ({ data }: Props) => {
   // 상세페이지 open
@@ -16,23 +16,27 @@ const OrderCard = ({ data }: Props) => {
       <Card>
         <div className="info-container">
           <div className="tag">
-            <span>주문생성일자</span>
+            <span>주문자명</span>
+            <span>주문일</span>
             <span>주소 1</span>
             <span>주소 2</span>
-            <span>주문 가격</span>
+            <span>가격</span>
           </div>
           <div className="info">
-            <span>{data.createdAt && dateFormat(data.createdAt)}</span>
-            <span className="address">{data.address1}</span>
-            <span className="address">{data.address2}</span>
-            <span>{amountFormat(data.totalPrice)}</span>
+            <span>{data.userName}</span>
+            <span>
+              {data.orderData.createdAt && dateFormat(data.orderData.createdAt)}
+            </span>
+            <span className="address">{data.orderData.address1}</span>
+            <span className="address">{data.orderData.address2}</span>
+            <span>{amountFormat(data.orderData.totalPrice)}</span>
           </div>
         </div>
         <div
           className="order-id"
-          onClick={() => data.id && getOrderWindow(data.id)}
+          onClick={() => data.orderData.id && getOrderWindow(data.orderData.id)}
         >
-          <span>{data.id}</span>
+          <span>{data.orderData.id}</span>
         </div>
       </Card>
       <Divider className="divider" />

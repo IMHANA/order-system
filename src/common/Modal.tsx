@@ -1,5 +1,4 @@
-import { FormEvent, ReactNode, useCallback, useEffect, useState } from "react";
-import { selectUserList } from "../apis/api";
+import { FormEvent, useCallback, useState } from "react";
 import styled from "styled-components";
 import { CreateOrder, IUser } from "src/apis/types";
 
@@ -7,7 +6,7 @@ interface Props {
   open: boolean;
   close: () => void;
   header: string;
-  children: ReactNode;
+  user: IUser[] | undefined;
   handleSubmit: ({
     customerId,
     address1,
@@ -16,18 +15,13 @@ interface Props {
   }: CreateOrder) => void;
 }
 
-const Modal = ({ open, close, header, handleSubmit }: Props) => {
+const Modal = ({ open, close, header, handleSubmit, user }: Props) => {
   const [bodyData, setBodyData] = useState<CreateOrder>({
     customerId: 0,
     address1: "",
     address2: "",
     totalPrice: 0,
   });
-  const [user, setUser] = useState<IUser[]>();
-
-  useEffect(() => {
-    selectUserList().then((res) => setUser(res));
-  }, []);
 
   const handleStates = useCallback(
     (
@@ -92,46 +86,41 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
                 &times;
               </button>
             </header>
-            <main>
-              <form
-                className="input-container"
-                onSubmit={(e) => sendChanges(e)}
+            <form className="input-container" onSubmit={(e) => sendChanges(e)}>
+              <select
+                id="user-name"
+                onChange={(e) =>
+                  handleStates("customer", e.currentTarget.value)
+                }
               >
-                <select
-                  id="user-name"
-                  onChange={(e) =>
-                    handleStates("customer", e.currentTarget.value)
-                  }
-                >
-                  <option value="">주문자는 선택해주세요</option>
-                  {getUsers()}
-                </select>
-                <input
-                  id="address1"
-                  placeholder="배송지 주소1"
-                  onChange={(e) =>
-                    handleStates("address1", e.currentTarget.value)
-                  }
-                ></input>
-                <input
-                  id="address2"
-                  placeholder="배송지 주소2"
-                  onChange={(e) =>
-                    handleStates("address2", e.currentTarget.value)
-                  }
-                ></input>
-                <input
-                  id="amount"
-                  placeholder="주문 금액"
-                  onChange={(e) =>
-                    handleStates("totalPrice", e.currentTarget.value)
-                  }
-                ></input>
-                <button type="submit" className="make-btn">
-                  생성하기
-                </button>
-              </form>
-            </main>
+                <option value="">주문자는 선택해주세요</option>
+                {getUsers()}
+              </select>
+              <input
+                id="address1"
+                placeholder="배송지 주소1"
+                onChange={(e) =>
+                  handleStates("address1", e.currentTarget.value)
+                }
+              ></input>
+              <input
+                id="address2"
+                placeholder="배송지 주소2"
+                onChange={(e) =>
+                  handleStates("address2", e.currentTarget.value)
+                }
+              ></input>
+              <input
+                id="amount"
+                placeholder="주문 금액"
+                onChange={(e) =>
+                  handleStates("totalPrice", e.currentTarget.value)
+                }
+              ></input>
+              <button type="submit" className="make-btn">
+                생성하기
+              </button>
+            </form>
             <footer>
               <button className="close" onClick={close}>
                 close
@@ -154,6 +143,10 @@ const ModalContainer = styled.div`
     left: 0;
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.6);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   .modal button {
@@ -191,7 +184,7 @@ const ModalContainer = styled.div`
     background-color: transparent;
   }
 
-  .modal > section > main {
+  .modal > section > form {
     padding: 16px;
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
@@ -243,6 +236,7 @@ const ModalContainer = styled.div`
       border: 1px solid #6c757d;
       background-color: #fff;
       border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
       :hover {
         background-color: #6c757d;
