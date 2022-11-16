@@ -74,10 +74,11 @@ const OrderList = () => {
       >
         <span>주문하기</span>
       </div>
-
-      <MainList lists={list} />
-
+      <div className="item-list">
+        <MainList lists={list} />
+      </div>
       <Pagenation
+        className="page"
         total={list.length}
         page={page}
         setPage={(page) => {
@@ -106,24 +107,40 @@ const List = styled.div<{ modalOpen: boolean }>`
     `position: fixed;
     overflow: hidden;
     width: 100%;
-    height: 100%
+    height: 100%;
 }`}
+
+  .page {
+    ${(props) => props.modalOpen && `display: none;`}
+  }
+
   .order-btn {
-    align-self: end;
-    margin: 16px 0;
-    width: 100vw;
-    max-width: 375px;
-    min-height: 40px;
-    border: 1px solid #868e9c;
-    border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: end;
+    width: 100vw;
+    max-width: 375px;
+    min-height: 40px;
+    margin: 16px 0;
+    border: 1px solid #868e9c;
+    border-radius: 5px;
     cursor: pointer;
+    &:hover {
+      background-color: #e7eaef;
+      border: none;
+      > span {
+        color: #111;
+        font-weight: bold;
+      }
+    }
 
     > span {
       color: #868e9c;
     }
+  }
+  .item-list {
+    height: 100%;
   }
 `;
 export default OrderList;
