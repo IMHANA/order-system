@@ -1,7 +1,6 @@
 import { amountFormat, dateFormat } from "../common/utils";
 import styled from "styled-components";
 import { newOrderList } from ".";
-import React from "react";
 
 interface Props {
   data: newOrderList;

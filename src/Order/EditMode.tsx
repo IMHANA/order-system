@@ -1,4 +1,3 @@
-import React from "react";
 import { CreateOrder, IOrder, IUser } from "../apis/types";
 import { amountFormat, dateFormat } from "../common/utils";
 
