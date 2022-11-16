@@ -11,7 +11,7 @@ interface Props {
 const ReadMode = ({ userData, orderData }: Props) => {
   return (
     <>
-      <p>주문자 정보</p>
+      <p className="title">고객 정보</p>
       <div className="user">
         <span>주문자ID</span>
         <span>주문자명</span>
@@ -22,7 +22,7 @@ const ReadMode = ({ userData, orderData }: Props) => {
         <span>{userData.name}</span>
         <span>{dateFormat(userData.createdAt)}</span>
       </div>
-      <p>주문 정보</p>
+      <p className="title">주문 정보</p>
       <div className="order">
         <span>주문ID</span>
         <span>배송지 주소1</span>
