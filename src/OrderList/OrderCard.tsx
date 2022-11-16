@@ -1,4 +1,4 @@
-import { CreateOrder, IOrder } from "src/apis/types";
+import { IOrder } from "src/apis/types";
 import { amountFormat, dateFormat } from "src/common/utils";
 import styled from "styled-components";
 
@@ -6,6 +6,7 @@ interface Props {
   data: IOrder;
 }
 const OrderCard = ({ data }: Props) => {
+  // 상세페이지 open
   const getOrderWindow = (id: number) => {
     return window.open("/orders/" + id);
   };

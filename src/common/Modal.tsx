@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useCallback, useEffect, useState } from "react";
 import { selectUserList } from "../apis/api";
 import styled from "styled-components";
 import { CreateOrder, IUser } from "src/apis/types";
@@ -29,25 +29,28 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
     selectUserList().then((res) => setUser(res));
   }, []);
 
-  const handleStates = (
-    key: "customer" | "address1" | "address2" | "totalPrice",
-    data: string | number
-  ) => {
-    if (key === "customer") {
-      const userId = user?.find((users) => users.name === data);
-      setBodyData({ ...bodyData, customerId: Number(userId?.id) });
-    } else if (key === "address1") {
-      setBodyData({ ...bodyData, address1: data.toString() });
-    } else if (key === "address2") {
-      setBodyData({ ...bodyData, address2: data.toString() });
-    } else if (key === "totalPrice") {
-      let check = /^[0-9]+$/;
-      if (!check.test(data.toString())) {
-        return alert("숫자만 입력 가능합니다.");
+  const handleStates = useCallback(
+    (
+      key: "customer" | "address1" | "address2" | "totalPrice",
+      data: string | number
+    ) => {
+      if (key === "customer") {
+        const userId = user?.find((users) => users.name === data);
+        setBodyData({ ...bodyData, customerId: Number(userId?.id) });
+      } else if (key === "address1") {
+        setBodyData({ ...bodyData, address1: data.toString() });
+      } else if (key === "address2") {
+        setBodyData({ ...bodyData, address2: data.toString() });
+      } else if (key === "totalPrice") {
+        let check = /^[0-9]+$/;
+        if (!check.test(data.toString())) {
+          return alert("숫자만 입력 가능합니다.");
+        }
+        setBodyData({ ...bodyData, totalPrice: Number(data) });
       }
-      setBodyData({ ...bodyData, totalPrice: Number(data) });
-    }
-  };
+    },
+    [bodyData, user]
+  );
 
   const sendChanges = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,7 +73,11 @@ const Modal = ({ open, close, header, handleSubmit }: Props) => {
 
   const getUsers = () => {
     return user?.map((u) => {
-      return <option value={u.name}>{u.name}</option>;
+      return (
+        <option key={u.createdAt} value={u.name}>
+          {u.name}
+        </option>
+      );
     });
   };
 
